@@ -1,4 +1,17 @@
-"scripts": {
-  "start": "node index.js",
-  "postinstall": "npx playwright install chromium"
+{
+  "name": "maddox-playwright-bot",
+  "version": "1.0.0",
+  "description": "Headless scraping bot for Maddox.ai dashboard",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "postinstall": "npx playwright install chromium"
+  },
+  "keywords": [],
+  "author": "Bilal El Ali",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "playwright": "^1.43.1"
+  }
 }
