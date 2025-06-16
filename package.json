@@ -1,17 +1,13 @@
 {
-  "name": "maddox-playwright-bot",
+  "name": "maddox-scraper-bot",
   "version": "1.0.0",
-  "description": "Headless scraping bot for Maddox.ai dashboard",
+  "description": "Headless scraping bot for Maddox.ai dashboard (Puppeteer)",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "postinstall": "npx playwright install chromium"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "Bilal El Ali",
-  "license": "MIT",
   "dependencies": {
     "express": "^4.18.2",
-    "playwright": "^1.43.1"
+    "puppeteer": "^21.3.8"  
   }
 }
