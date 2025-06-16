@@ -1,11 +1,4 @@
-{
-  "name": "maddox-playwright-bot",
-  "version": "1.0.0",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "express": "^4.18.2",
-    "playwright": "^1.43.1"
-  }
+"scripts": {
+  "start": "node index.js",
+  "postinstall": "npx playwright install chromium"
 }
