@@ -12,30 +12,45 @@ app.post('/scrape', async (req, res) => {
 
   let browser;
   try {
-    // 1) Launch bundled Chromium
     browser = await puppeteer.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+      args: ['--no-sandbox','--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
 
-    // 2) Login
+    // 1) Login
     await page.goto('https://app.maddox.ai/login', { waitUntil: 'networkidle2' });
     await page.type('input[name="email"]', email);
     await page.type('input[name="password"]', password);
-    await page.click('button[type="submit"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle2' });
+    await Promise.all([
+      page.click('button[type="submit"]'),
+      page.waitForNavigation({ waitUntil: 'networkidle2' }),
+    ]);
 
-    // 3) Go to dashboard
+    // 2) Dashboard
     await page.goto('https://app.maddox.ai/monitor', { waitUntil: 'networkidle2' });
-    await page.waitForSelector('text=Items inspected');
 
-    // 4) Scrape
-    const itemsInspected     = await page.$eval('text=Items inspected', el => el.innerText);
-    const yieldMetric        = await page.$eval('text=Yield', el => el.innerText);
-    const mostCommonDefect   = await page.$eval('text=Most common defects', el => el.innerText);
+    // 3) Scrape using evaluate()
+    const itemsInspected = await page.evaluate(() => {
+      const el = Array.from(document.querySelectorAll('div'))
+        .find(d => d.textContent.includes('Items inspected'));
+      return el ? el.textContent.trim() : null;
+    });
+
+    const yieldMetric = await page.evaluate(() => {
+      const el = Array.from(document.querySelectorAll('div'))
+        .find(d => d.textContent.includes('Yield'));
+      return el ? el.textContent.trim() : null;
+    });
+
+    const mostCommonDefect = await page.evaluate(() => {
+      const el = Array.from(document.querySelectorAll('div'))
+        .find(d => d.textContent.includes('Most common defects'));
+      return el ? el.textContent.trim() : null;
+    });
 
     res.json({ itemsInspected, yield: yieldMetric, mostCommonDefect });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   } finally {
